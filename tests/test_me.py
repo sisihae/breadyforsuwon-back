@@ -13,6 +13,9 @@ from app.config import settings
 
 
 class FakeUserRepo:
+    def __init__(self, db):
+        self.db = db
+    
     def get_by_id(self, user_id):
         return SimpleNamespace(
             id=user_id,

@@ -1,6 +1,7 @@
 # BreadyForSuwon API Documentation
 
 ## Overview
+
 BreadyForSuwon is a RAG-powered bakery recommendation chatbot backend for exploring bakeries in Suwon. It provides user authentication, bakery search, wishlist management, visit record tracking, and chat history.
 
 **Base URL:** `http://localhost:8000/api/v1`
@@ -16,6 +17,7 @@ BreadyForSuwon is a RAG-powered bakery recommendation chatbot backend for explor
 **Description:** Returns the Kakao OAuth authorize URL for the frontend to redirect users to.
 
 **Response:**
+
 ```json
 {
   "authorize_url": "https://kauth.kakao.com/oauth/authorize?client_id=...&redirect_uri=...&response_type=code"
@@ -29,6 +31,7 @@ BreadyForSuwon is a RAG-powered bakery recommendation chatbot backend for explor
 **Endpoint:** `GET /auth/kakao/callback`
 
 **Query Parameters:**
+
 - `code` (string, required): Authorization code from Kakao
 
 **Description:** Exchanges authorization code for access token, fetches user profile, creates/finds user in DB, and sets HTTP-only session cookie.
@@ -36,6 +39,7 @@ BreadyForSuwon is a RAG-powered bakery recommendation chatbot backend for explor
 **Response:** Redirects to frontend URL with session cookie set.
 
 **Cookie:**
+
 - `session`: JWT token (HttpOnly, SameSite=lax)
 - Max-Age: 7 days
 
@@ -48,6 +52,7 @@ BreadyForSuwon is a RAG-powered bakery recommendation chatbot backend for explor
 **Description:** Clears the session cookie to log out the user.
 
 **Response:**
+
 ```json
 {
   "ok": true
@@ -65,6 +70,7 @@ BreadyForSuwon is a RAG-powered bakery recommendation chatbot backend for explor
 **Description:** Returns current user profile with visit records count and wishlist count.
 
 **Response:**
+
 ```json
 {
   "id": "550e8400-e29b-41d4-a716-446655440000",
@@ -85,12 +91,14 @@ BreadyForSuwon is a RAG-powered bakery recommendation chatbot backend for explor
 **Endpoint:** `GET /bakeries`
 
 **Query Parameters:**
+
 - `skip` (integer, optional, default=0): Number of records to skip
 - `limit` (integer, optional, default=10): Number of records to return
 
 **Description:** Returns list of all bakeries.
 
 **Response:**
+
 ```json
 [
   {
@@ -109,9 +117,11 @@ BreadyForSuwon is a RAG-powered bakery recommendation chatbot backend for explor
 **Endpoint:** `GET /bakeries/{bakery_id}`
 
 **Path Parameters:**
+
 - `bakery_id` (UUID): Bakery ID
 
 **Response:**
+
 ```json
 {
   "id": "550e8400-e29b-41d4-a716-446655440000",
@@ -133,6 +143,7 @@ BreadyForSuwon is a RAG-powered bakery recommendation chatbot backend for explor
 **Description:** Returns list of all available bread tags/types.
 
 **Response:**
+
 ```json
 [
   {
@@ -153,11 +164,13 @@ BreadyForSuwon is a RAG-powered bakery recommendation chatbot backend for explor
 **Endpoint:** `GET /tags/{tag_name}/bakeries`
 
 **Path Parameters:**
+
 - `tag_name` (string): Name of the bread tag
 
 **Description:** Returns list of bakeries that sell a specific bread type.
 
 **Response:**
+
 ```json
 [
   {
@@ -180,6 +193,7 @@ BreadyForSuwon is a RAG-powered bakery recommendation chatbot backend for explor
 **Authentication:** Optional
 
 **Request Body:**
+
 ```json
 {
   "message": "수원에서 맛있는 크루아상 파는 빵집 추천해줘",
@@ -190,6 +204,7 @@ BreadyForSuwon is a RAG-powered bakery recommendation chatbot backend for explor
 **Description:** Sends a message to the RAG chatbot. Returns AI-generated response with relevant bakeries.
 
 **Response:**
+
 ```json
 {
   "response": "수원에서 크루아상을 파는 빵집 중에 르뱅드마리가 유명합니다...",
@@ -210,6 +225,7 @@ BreadyForSuwon is a RAG-powered bakery recommendation chatbot backend for explor
 **Endpoint:** `POST /search`
 
 **Request Body:**
+
 ```json
 {
   "query": "크루아상",
@@ -220,6 +236,7 @@ BreadyForSuwon is a RAG-powered bakery recommendation chatbot backend for explor
 **Description:** Searches bakeries by query and optional bread tags using vector embeddings.
 
 **Response:**
+
 ```json
 {
   "results": [
@@ -242,11 +259,13 @@ BreadyForSuwon is a RAG-powered bakery recommendation chatbot backend for explor
 **Authentication:** Optional
 
 **Query Parameters:**
+
 - `limit` (integer, optional, default=100): Number of recent records to return
 
 **Description:** Returns recent chat history entries with metadata.
 
 **Response:**
+
 ```json
 [
   {
@@ -276,6 +295,7 @@ BreadyForSuwon is a RAG-powered bakery recommendation chatbot backend for explor
 **Description:** Returns all wishlist items for the current user.
 
 **Response:**
+
 ```json
 [
   {
@@ -302,6 +322,7 @@ BreadyForSuwon is a RAG-powered bakery recommendation chatbot backend for explor
 **Authentication:** Required (session cookie)
 
 **Request Body:**
+
 ```json
 {
   "bakery_id": "550e8400-e29b-41d4-a716-446655440000"
@@ -321,9 +342,11 @@ BreadyForSuwon is a RAG-powered bakery recommendation chatbot backend for explor
 **Authentication:** Required (session cookie)
 
 **Path Parameters:**
+
 - `item_id` (UUID): Wishlist item ID
 
 **Request Body:**
+
 ```json
 {
   "note": "친구 추천 빵집",
@@ -344,11 +367,13 @@ BreadyForSuwon is a RAG-powered bakery recommendation chatbot backend for explor
 **Authentication:** Required (session cookie)
 
 **Path Parameters:**
+
 - `item_id` (UUID): Wishlist item ID
 
 **Description:** Removes a bakery from the current user's wishlist.
 
 **Response:**
+
 ```json
 {
   "ok": true
@@ -368,6 +393,7 @@ BreadyForSuwon is a RAG-powered bakery recommendation chatbot backend for explor
 **Description:** Returns all visit records for the current user, sorted by visit date (most recent first).
 
 **Response:**
+
 ```json
 [
   {
@@ -395,6 +421,7 @@ BreadyForSuwon is a RAG-powered bakery recommendation chatbot backend for explor
 **Authentication:** Required (session cookie)
 
 **Request Body:**
+
 ```json
 {
   "bakery_id": "550e8400-e29b-41d4-a716-446655440000",
@@ -418,9 +445,11 @@ BreadyForSuwon is a RAG-powered bakery recommendation chatbot backend for explor
 **Authentication:** Required (session cookie)
 
 **Path Parameters:**
+
 - `record_id` (UUID): Visit record ID
 
 **Request Body:**
+
 ```json
 {
   "rating": 4,
@@ -441,11 +470,13 @@ BreadyForSuwon is a RAG-powered bakery recommendation chatbot backend for explor
 **Authentication:** Required (session cookie)
 
 **Path Parameters:**
+
 - `record_id` (UUID): Visit record ID
 
 **Description:** Deletes a visit record.
 
 **Response:**
+
 ```json
 {
   "ok": true
@@ -459,6 +490,7 @@ BreadyForSuwon is a RAG-powered bakery recommendation chatbot backend for explor
 All endpoints return standard HTTP error codes with descriptive messages:
 
 ### 400 Bad Request
+
 ```json
 {
   "detail": "Invalid request parameters"
@@ -466,6 +498,7 @@ All endpoints return standard HTTP error codes with descriptive messages:
 ```
 
 ### 401 Unauthorized
+
 ```json
 {
   "detail": "Not authenticated"
@@ -473,6 +506,7 @@ All endpoints return standard HTTP error codes with descriptive messages:
 ```
 
 ### 403 Forbidden
+
 ```json
 {
   "detail": "Cannot modify another user's data"
@@ -480,6 +514,7 @@ All endpoints return standard HTTP error codes with descriptive messages:
 ```
 
 ### 404 Not Found
+
 ```json
 {
   "detail": "Resource not found"
@@ -487,6 +522,7 @@ All endpoints return standard HTTP error codes with descriptive messages:
 ```
 
 ### 500 Internal Server Error
+
 ```json
 {
   "detail": "Internal server error"
@@ -498,6 +534,7 @@ All endpoints return standard HTTP error codes with descriptive messages:
 ## Data Models
 
 ### User
+
 - `id` (UUID): Unique identifier
 - `kakao_id` (string, optional): Kakao account ID
 - `email` (string, optional): Email address
@@ -505,6 +542,7 @@ All endpoints return standard HTTP error codes with descriptive messages:
 - `created_at` (datetime): Account creation timestamp
 
 ### Bakery
+
 - `id` (UUID): Unique identifier
 - `name` (string): Bakery name
 - `address` (string): Bakery address
@@ -512,10 +550,12 @@ All endpoints return standard HTTP error codes with descriptive messages:
 - `bread_tags` (array): List of bread types sold
 
 ### BreadTag
+
 - `id` (UUID): Unique identifier
 - `name` (string): Tag name (e.g., "Croissant")
 
 ### WishlistItem
+
 - `id` (UUID): Unique identifier
 - `user_id` (UUID): Owner user ID
 - `bakery_id` (UUID): Associated bakery ID
@@ -525,6 +565,7 @@ All endpoints return standard HTTP error codes with descriptive messages:
 - `updated_at` (datetime): Last update timestamp
 
 ### BakeryVisitRecord
+
 - `id` (UUID): Unique identifier
 - `user_id` (UUID): Owner user ID
 - `bakery_id` (UUID): Associated bakery ID
@@ -536,6 +577,7 @@ All endpoints return standard HTTP error codes with descriptive messages:
 - `updated_at` (datetime): Last update timestamp
 
 ### ChatHistory
+
 - `id` (UUID): Unique identifier
 - `user_message` (string): User's chat message
 - `bot_response` (string): Bot's response
@@ -547,10 +589,12 @@ All endpoints return standard HTTP error codes with descriptive messages:
 ## Pagination
 
 List endpoints support optional pagination parameters:
+
 - `skip` (integer, default=0): Number of records to skip
 - `limit` (integer, default=10): Number of records to return
 
 Example:
+
 ```
 GET /bakeries?skip=10&limit=20
 ```
@@ -560,6 +604,7 @@ GET /bakeries?skip=10&limit=20
 ## Authentication Details
 
 ### Session Cookie
+
 - **Name:** `session` (configurable)
 - **Value:** JWT token containing user ID
 - **HttpOnly:** True (prevents JavaScript access)
@@ -568,6 +613,7 @@ GET /bakeries?skip=10&limit=20
 - **Max-Age:** 604800 seconds (7 days)
 
 ### How to Authenticate
+
 1. Call `GET /auth/kakao/login` to get authorize URL
 2. Redirect user to Kakao authorize URL
 3. After user consents, Kakao redirects to callback
@@ -585,6 +631,7 @@ Currently no rate limiting is enforced. Future versions may implement request th
 ## Environment Variables
 
 Configure via `.env` file:
+
 ```
 # Database
 DATABASE_URL=postgresql://user:password@localhost:5432/breadyforsuwon
@@ -619,11 +666,13 @@ PINECONE_INDEX=bakeries
 ## Testing
 
 Run all tests:
+
 ```bash
 pytest -q
 ```
 
 Run specific test file:
+
 ```bash
 pytest -q tests/test_auth.py
 pytest -q tests/test_wishlist.py
@@ -636,16 +685,19 @@ pytest -q tests/test_me.py
 ## Development
 
 ### Start Server
+
 ```bash
 uvicorn app.main:app --reload
 ```
 
 ### View API Docs
+
 - Swagger UI: `http://localhost:8000/docs`
 - ReDoc: `http://localhost:8000/redoc`
 
 ---
 
 ## Version
+
 - **API Version:** v1
 - **Last Updated:** December 2025

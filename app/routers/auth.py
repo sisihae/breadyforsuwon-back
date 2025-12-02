@@ -12,7 +12,7 @@ from app.repositories.visit_record_repo import BakeryVisitRecordRepository
 from app.repositories.wishlist_repo import WishlistRepository
 from app.utils.jwt import create_access_token
 from app.utils.auth import get_current_user_id
-from app.schemas.user import UserProfileResponse
+from app.schemas.user import UserProfileResponse, UserProfileUpdateRequest
 
 router = APIRouter()
 
@@ -125,6 +125,39 @@ def get_me(current_user: UUID = Depends(get_current_user), db: Session = Depends
         id=user.id,
         email=user.email,
         name=user.name,
+        profile_image=user.profile_image,
+        created_at=user.created_at,
+        visit_records_count=visit_records_count,
+        wishlist_count=wishlist_count,
+    )
+
+
+@router.put("/me", response_model=UserProfileResponse)
+def update_me(
+    data: UserProfileUpdateRequest,
+    current_user: UUID = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """Update current user profile (name and/or profile_image)."""
+    user_repo = UserRepository(db)
+    user = user_repo.update(current_user, name=data.name, profile_image=data.profile_image)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Get counts
+    visit_repo = BakeryVisitRecordRepository(db)
+    visit_records = visit_repo.list_by_user(current_user)
+    visit_records_count = len(visit_records)
+    
+    wishlist_repo = WishlistRepository(db)
+    wishlist_items = wishlist_repo.list_by_user(current_user)
+    wishlist_count = len(wishlist_items)
+    
+    return UserProfileResponse(
+        id=user.id,
+        email=user.email,
+        name=user.name,
+        profile_image=user.profile_image,
         created_at=user.created_at,
         visit_records_count=visit_records_count,
         wishlist_count=wishlist_count,

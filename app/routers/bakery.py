@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from uuid import UUID
 
 from app.config import get_db
+from app.models import Bakery
 from app.repositories import BakeryRepository
 from app.schemas import BakeryResponse, BakeryCreate, BakeryUpdate
 
@@ -27,14 +28,25 @@ async def get_bakery(
 async def get_all_bakeries(
     db: Session = Depends(get_db),
     district: str = Query(None, description="Filter by district"),
+    category: str = Query(None, description="Filter by category"),
+    rating: float = Query(None, ge=1.0, le=5.0, description="Minimum rating filter"),
     limit: int = Query(100, ge=1, le=1000)
 ):
-    """Get all bakeries with optional filters"""
+    """Get all bakeries with optional filters (category, rating, district)"""
     repo = BakeryRepository(db)
+    query = repo.db.query(Bakery)
+    
+    # Apply filters
     if district:
-        bakeries = repo.get_by_district(district, limit=limit)
-    else:
-        bakeries = repo.get_all()[:limit]
+        query = query.filter(Bakery.district == district)
+    
+    if category:
+        query = query.filter(Bakery.category == category)
+    
+    if rating is not None:
+        query = query.filter(Bakery.rating >= rating)
+    
+    bakeries = query.limit(limit).all()
     return bakeries
 
 

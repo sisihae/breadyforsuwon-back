@@ -8,6 +8,7 @@ class UserCreate(BaseModel):
     kakao_id: Optional[str] = None
     email: Optional[EmailStr] = None
     name: Optional[str] = None
+    profile_image: Optional[str] = None
 
 
 class UserResponse(BaseModel):
@@ -15,16 +16,23 @@ class UserResponse(BaseModel):
     kakao_id: Optional[str]
     email: Optional[EmailStr]
     name: Optional[str]
+    profile_image: Optional[str]
     created_at: datetime
 
     class Config:
         from_attributes = True
 
 
+class UserProfileUpdateRequest(BaseModel):
+    name: Optional[str] = None
+    profile_image: Optional[str] = None
+
+
 class UserProfileResponse(BaseModel):
     id: UUID
     email: Optional[EmailStr]
     name: Optional[str]
+    profile_image: Optional[str]
     created_at: datetime
     visit_records_count: int
     wishlist_count: int

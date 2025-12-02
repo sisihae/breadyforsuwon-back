@@ -60,3 +60,19 @@ class UserRepository:
 
         # create new
         return self.create(kakao_id=kakao_id, email=email, name=name)
+
+    def update(self, user_id: str, name: Optional[str] = None, profile_image: Optional[str] = None) -> Optional[User]:
+        """Update user profile (name and/or profile_image)"""
+        user = self.get_by_id(user_id)
+        if not user:
+            return None
+        
+        if name is not None:
+            user.name = name
+        if profile_image is not None:
+            user.profile_image = profile_image
+        
+        self.db.add(user)
+        self.db.commit()
+        self.db.refresh(user)
+        return user
