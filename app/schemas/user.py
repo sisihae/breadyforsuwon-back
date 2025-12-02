@@ -19,3 +19,15 @@ class UserResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class UserProfileResponse(BaseModel):
+    id: UUID
+    email: Optional[EmailStr]
+    name: Optional[str]
+    created_at: datetime
+    visit_records_count: int
+    wishlist_count: int
+
+    class Config:
+        from_attributes = True

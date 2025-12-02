@@ -1,7 +1,7 @@
 from fastapi.testclient import TestClient
 from types import SimpleNamespace
 from uuid import uuid4
-from datetime import date
+from datetime import date, datetime
 import sys
 import os
 
@@ -18,6 +18,7 @@ class FakeVisitRecordRepo:
 
     def create(self, user_id, bakery_id, visit_date, rating, bread_purchased=None, review=None):
         record_id = uuid4()
+        now = datetime.now()
         self.records[record_id] = SimpleNamespace(
             id=record_id,
             user_id=user_id,
@@ -26,8 +27,8 @@ class FakeVisitRecordRepo:
             rating=rating,
             bread_purchased=bread_purchased,
             review=review,
-            created_at=None,
-            updated_at=None,
+            created_at=now,
+            updated_at=now,
         )
         return self.records[record_id]
 
@@ -49,6 +50,7 @@ class FakeVisitRecordRepo:
             record.bread_purchased = bread_purchased
         if review is not None:
             record.review = review
+        record.updated_at = datetime.now()
         return record
 
     def delete(self, record_id):
@@ -59,6 +61,9 @@ class FakeVisitRecordRepo:
 
 
 class FakeBakeryRepo:
+    def __init__(self, db):
+        self.db = db
+    
     def get_by_id(self, bakery_id):
         return SimpleNamespace(
             id=bakery_id,

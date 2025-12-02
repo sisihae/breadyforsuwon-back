@@ -1,13 +1,18 @@
-from fastapi import APIRouter, Depends, Request, Response, HTTPException
+from fastapi import APIRouter, Depends, Request, Response, HTTPException, Cookie
 from fastapi.responses import JSONResponse, RedirectResponse
 from sqlalchemy.orm import Session
 import httpx
 from typing import Optional
+from uuid import UUID
 
 from app.config import settings
 from app.config.database import get_db
 from app.repositories.user_repo import UserRepository
+from app.repositories.visit_record_repo import BakeryVisitRecordRepository
+from app.repositories.wishlist_repo import WishlistRepository
 from app.utils.jwt import create_access_token
+from app.utils.auth import get_current_user_id
+from app.schemas.user import UserProfileResponse
 
 router = APIRouter()
 
@@ -87,3 +92,40 @@ def kakao_logout(response: Response):
     # Clear cookie by setting empty value and max-age=0
     resp.delete_cookie(key=settings.session_cookie_name, path="/")
     return resp
+
+
+def get_current_user(session: Optional[str] = Cookie(None)) -> UUID:
+    """Dependency to extract user_id from session cookie."""
+    if not session:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+    user_id = get_current_user_id(session)
+    if not user_id:
+        raise HTTPException(status_code=401, detail="Invalid token")
+    return user_id
+
+
+@router.get("/me", response_model=UserProfileResponse)
+def get_me(current_user: UUID = Depends(get_current_user), db: Session = Depends(get_db)):
+    """Get current user profile with visit records and wishlist counts."""
+    user_repo = UserRepository(db)
+    user = user_repo.get_by_id(current_user)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Get counts
+    visit_repo = BakeryVisitRecordRepository(db)
+    visit_records = visit_repo.list_by_user(current_user)
+    visit_records_count = len(visit_records)
+    
+    wishlist_repo = WishlistRepository(db)
+    wishlist_items = wishlist_repo.list_by_user(current_user)
+    wishlist_count = len(wishlist_items)
+    
+    return UserProfileResponse(
+        id=user.id,
+        email=user.email,
+        name=user.name,
+        created_at=user.created_at,
+        visit_records_count=visit_records_count,
+        wishlist_count=wishlist_count,
+    )
