@@ -2,7 +2,15 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
-from app.routers import bakery_router, chat_router, search_router, tags_router
+from app.routers import (
+    bakery_router,
+    chat_router,
+    search_router,
+    tags_router,
+    chat_history_router,
+    auth_router,
+    wishlist_router,
+)
 
 
 # Create FastAPI app
@@ -28,6 +36,8 @@ app.include_router(chat_router, prefix=settings.api_v1_prefix)
 app.include_router(search_router, prefix=settings.api_v1_prefix)
 app.include_router(tags_router, prefix=settings.api_v1_prefix)
 app.include_router(chat_history_router, prefix=settings.api_v1_prefix)
+app.include_router(auth_router, prefix=settings.api_v1_prefix)
+app.include_router(wishlist_router, prefix=settings.api_v1_prefix)
 
 
 @app.get("/")

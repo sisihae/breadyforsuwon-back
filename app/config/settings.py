@@ -23,6 +23,18 @@ class Settings(BaseSettings):
     app_name: str = "BreadyForSuwon"
     api_v1_prefix: str = "/api/v1"
     
+    # JWT / Auth
+    jwt_secret: str = "changeme"
+    jwt_algorithm: str = "HS256"
+    jwt_exp_seconds: int = 60 * 60 * 24 * 7  # 7 days
+    session_cookie_name: str = "session"
+
+    # Kakao OAuth
+    kakao_client_id: str = ""
+    kakao_client_secret: str = ""
+    kakao_redirect_uri: str = "http://localhost:3000/auth/kakao/callback"
+    frontend_url: str = "http://localhost:3000"
+    
     # Embedding Settings
     embedding_dimension: int = 1536  # text-embedding-3-large
     top_k_results: int = 5

@@ -131,12 +131,12 @@ class RAGService:
         # Persist chat history (store user Q/A pair and metadata)
         try:
             chat_repo = ChatRepository(self.db)
-            metadata = {
+            metadata_json = {
                 "sources": sources,
                 "bread_tags": bread_tags,
                 "bakery_ids": [str(b.id) for b in search_results]
             }
-            chat_repo.create_history(user_message=message, bot_response=response_text, metadata=metadata)
+            chat_repo.create_history(user_message=message, bot_response=response_text, metadata_json=metadata_json)
         except Exception:
             # Do not fail the chat if history persistence fails; just continue
             pass

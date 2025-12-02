@@ -11,7 +11,7 @@ class ChatHistory(Base):
     id = Column(PG_UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     user_message = Column(Text, nullable=False)
     bot_response = Column(Text, nullable=False)
-    metadata = Column(JSON, nullable=True)  # e.g., {'sources': [...], 'bread_tags': [...], 'bakery_ids': [...]} 
+    metadata_json = Column(JSON, nullable=True)  # e.g., {'sources': [...], 'bread_tags': [...], 'bakery_ids': [...]} 
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     def __repr__(self):

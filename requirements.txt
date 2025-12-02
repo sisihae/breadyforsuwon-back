@@ -32,3 +32,7 @@ mypy==1.7.1
 
 # API Documentation
 python-multipart==0.0.6
+
+# OAuth + Auth
+PyJWT==2.8.0
+httpx==0.24.1

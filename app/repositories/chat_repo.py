@@ -9,8 +9,8 @@ class ChatRepository:
     def __init__(self, db: Session):
         self.db = db
 
-    def create_history(self, user_message: str, bot_response: str, metadata: Optional[dict] = None) -> ChatHistory:
-        entry = ChatHistory(user_message=user_message, bot_response=bot_response, metadata=metadata)
+    def create_history(self, user_message: str, bot_response: str, metadata_json: Optional[dict] = None) -> ChatHistory:
+        entry = ChatHistory(user_message=user_message, bot_response=bot_response, metadata_json=metadata_json)
         self.db.add(entry)
         self.db.commit()
         self.db.refresh(entry)
