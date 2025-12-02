@@ -10,6 +10,7 @@ from app.routers import (
     chat_history_router,
     auth_router,
     wishlist_router,
+    visit_records_router,
 )
 
 
@@ -38,6 +39,7 @@ app.include_router(tags_router, prefix=settings.api_v1_prefix)
 app.include_router(chat_history_router, prefix=settings.api_v1_prefix)
 app.include_router(auth_router, prefix=settings.api_v1_prefix)
 app.include_router(wishlist_router, prefix=settings.api_v1_prefix)
+app.include_router(visit_records_router, prefix=settings.api_v1_prefix)
 
 
 @app.get("/")
