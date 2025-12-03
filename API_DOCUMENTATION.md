@@ -177,7 +177,8 @@ BreadyForSuwon is a RAG-powered bakery recommendation chatbot backend for explor
     "id": "550e8400-e29b-41d4-a716-446655440000",
     "name": "르뱅드마리",
     "address": "경기 수원시 팔달구 행궁로 30",
-    "rating": 4.8
+    "rating": 4.8,
+    "bread_tags": ["크루아상", "도넛"]
   }
 ]
 ```
@@ -212,7 +213,8 @@ BreadyForSuwon is a RAG-powered bakery recommendation chatbot backend for explor
     {
       "id": "550e8400-e29b-41d4-a716-446655440000",
       "name": "르뱅드마리",
-      "address": "경기 수원시 팔달구 행궁로 30"
+      "address": "경기 수원시 팔달구 행궁로 30",
+      "bread_tags": ["크루아상", "도넛"]
     }
   ]
 }
@@ -228,12 +230,11 @@ BreadyForSuwon is a RAG-powered bakery recommendation chatbot backend for explor
 
 ```json
 {
-  "query": "크루아상",
-  "bread_tags": ["Croissant"]
+  "query": "르뱅드마리"
 }
 ```
 
-**Description:** Searches bakeries by query and optional bread tags using vector embeddings.
+**Description:** Searches bakeries by name.
 
 **Response:**
 
@@ -244,7 +245,7 @@ BreadyForSuwon is a RAG-powered bakery recommendation chatbot backend for explor
       "id": "550e8400-e29b-41d4-a716-446655440000",
       "name": "르뱅드마리",
       "address": "경기 수원시 팔달구 행궁로 30",
-      "score": 0.92
+      "bread_tags": ["크루아상", "도넛"]
     }
   ]
 }
@@ -252,7 +253,7 @@ BreadyForSuwon is a RAG-powered bakery recommendation chatbot backend for explor
 
 ---
 
-### Get Chat History
+### Get Chat History List
 
 **Endpoint:** `GET /chat/history`
 
@@ -271,15 +272,77 @@ BreadyForSuwon is a RAG-powered bakery recommendation chatbot backend for explor
   {
     "id": "550e8400-e29b-41d4-a716-446655440000",
     "user_message": "수원 빵집 추천해줘",
-    "bot_response": "수원의 인기 빵집들을 소개합니다...",
+    "bot_response": "수원에는 다양한 빵집이 있습니다...",
     "metadata_json": {
-      "sources": ["르뱅드마리", "베이커리카페 밀"],
+      "sources": [...],
       "bread_tags": ["Croissant"],
-      "bakery_ids": ["550e8400-e29b-41d4-a716-446655440000"]
+      "bakery_ids": ["550e8400-e29b-41d4-a716-446655440001"]
     },
     "created_at": "2025-12-01T10:00:00"
   }
 ]
+```
+
+---
+
+### Get Chat History by ID
+
+**Endpoint:** `GET /chat/history/{id}`
+
+**Authentication:** Optional
+
+**Path Parameters:**
+
+- `id` (UUID): Chat history ID
+
+**Description:** Returns a specific chat history entry by ID.
+
+**Response:**
+
+```json
+{
+  "id": "550e8400-e29b-41d4-a716-446655440000",
+  "user_message": "수원 빵집 추천해줘",
+  "bot_response": "수원에는 다양한 빵집이 있습니다...",
+  "metadata_json": {
+    "sources": [...],
+    "bread_tags": ["Croissant"],
+    "bakery_ids": ["550e8400-e29b-41d4-a716-446655440001"]
+  },
+  "created_at": "2025-12-01T10:00:00"
+}
+```
+
+**Error Response (404):**
+
+```json
+{
+  "detail": "Chat history not found"
+}
+```
+
+---
+
+### Delete Chat History
+
+**Endpoint:** `DELETE /chat/history/{id}`
+
+**Authentication:** Optional
+
+**Path Parameters:**
+
+- `id` (UUID): Chat history ID
+
+**Description:** Deletes a specific chat history entry by ID.
+
+**Response:** 204 No Content (empty response on success)
+
+**Error Response (404):**
+
+```json
+{
+  "detail": "Chat history not found"
+}
 ```
 
 ---

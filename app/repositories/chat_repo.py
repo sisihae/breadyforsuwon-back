@@ -21,3 +21,11 @@ class ChatRepository:
 
     def list_recent(self, limit: int = 100) -> List[ChatHistory]:
         return self.db.query(ChatHistory).order_by(ChatHistory.created_at.desc()).limit(limit).all()
+
+    def delete_by_id(self, history_id: UUID) -> bool:
+        entry = self.get_by_id(history_id)
+        if entry:
+            self.db.delete(entry)
+            self.db.commit()
+            return True
+        return False
