@@ -5,7 +5,6 @@ from app.config import settings
 from app.routers import (
     bakery_router,
     chat_router,
-    search_router,
     tags_router,
     chat_history_router,
     auth_router,
@@ -34,7 +33,6 @@ app.add_middleware(
 # Include routers
 app.include_router(bakery_router, prefix=settings.api_v1_prefix)
 app.include_router(chat_router, prefix=settings.api_v1_prefix)
-app.include_router(search_router, prefix=settings.api_v1_prefix)
 app.include_router(tags_router, prefix=settings.api_v1_prefix)
 app.include_router(chat_history_router, prefix=settings.api_v1_prefix)
 app.include_router(auth_router, prefix=settings.api_v1_prefix)

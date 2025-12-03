@@ -16,7 +16,6 @@ class Bakery(Base):
     shop_id = Column(String(50), nullable=True, unique=True) 
     rating = Column(Float, nullable=True)
     address = Column(Text, nullable=False)
-    category = Column(String(100), nullable=True)
     district = Column(String(50), nullable=True, index=True)  # 권선구, 영통구 등
     opening_hours = Column(String(255), nullable=True)
     

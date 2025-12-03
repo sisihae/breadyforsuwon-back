@@ -10,9 +10,6 @@ class BakeryBase(BaseModel):
     shop_id: Optional[str] = None
     rating: Optional[float] = None
     address: str
-    tel: Optional[str] = None
-    website: Optional[str] = None
-    category: Optional[str] = None
     district: Optional[str] = None
     opening_hours: Optional[str] = None
     ai_summary: Optional[str] = None
@@ -32,9 +29,6 @@ class BakeryUpdate(BaseModel):
     name: Optional[str] = None
     rating: Optional[float] = None
     address: Optional[str] = None
-    tel: Optional[str] = None
-    website: Optional[str] = None
-    category: Optional[str] = None
     district: Optional[str] = None
     opening_hours: Optional[str] = None
     ai_summary: Optional[str] = None
@@ -65,7 +59,6 @@ class SearchQuery(BaseModel):
     """Schema for search query"""
     query: str = Field(..., description="Search query for RAG")
     district: Optional[str] = None
-    min_rating: Optional[float] = None
     bread_tags: Optional[List[str]] = Field(
         default=None,
         description="빵 종류로 필터링"
@@ -76,11 +69,6 @@ class SearchQuery(BaseModel):
 class ChatRequest(BaseModel):
     """Schema for chat request"""
     message: str
-    district: Optional[str] = None
-    bread_tags: Optional[List[str]] = Field(
-        default=None,
-        description="특정 빵 종류로 필터링"
-    )
     context_count: int = Field(default=5, ge=1, le=20)
 
 

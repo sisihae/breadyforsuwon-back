@@ -28,7 +28,6 @@ async def get_bakery(
 async def get_all_bakeries(
     db: Session = Depends(get_db),
     district: str = Query(None, description="Filter by district"),
-    category: str = Query(None, description="Filter by category"),
     rating: float = Query(None, ge=1.0, le=5.0, description="Minimum rating filter"),
     limit: int = Query(100, ge=1, le=1000)
 ):
@@ -39,9 +38,6 @@ async def get_all_bakeries(
     # Apply filters
     if district:
         query = query.filter(Bakery.district == district)
-    
-    if category:
-        query = query.filter(Bakery.category == category)
     
     if rating is not None:
         query = query.filter(Bakery.rating >= rating)
@@ -96,12 +92,26 @@ async def delete_bakery(
     return {"message": "Bakery deleted successfully"}
 
 
-@router.get("/search/by-name", response_model=list[BakeryResponse])
-async def search_by_name(
-    q: str = Query(..., min_length=1),
+@router.get("/search", response_model=list[BakeryResponse])
+async def search_bakeries(
+    name: str = Query(None, min_length=1, description="Search by bakery name"),
+    tag: str = Query(None, min_length=1, description="Search by bread tag (e.g., 크로아상, 식빵, 파이)"),
     db: Session = Depends(get_db),
     limit: int = Query(10, ge=1, le=100)
 ):
-    """Search bakeries by name"""
+    """Search bakeries by name or tag
+
+    Provide either 'name' or 'tag' parameter to search.
+    If both are provided, name takes precedence.
+    """
+    if not name and not tag:
+        raise HTTPException(status_code=400, detail="Either 'name' or 'tag' parameter is required")
+
     repo = BakeryRepository(db)
-    return repo.search_by_name(q, limit=limit)
+
+    # Search by name takes precedence if both provided
+    if name:
+        return repo.search_by_name(name, limit=limit)
+
+    # Search by tag
+    return repo.get_bakeries_by_tag(tag, limit=limit)

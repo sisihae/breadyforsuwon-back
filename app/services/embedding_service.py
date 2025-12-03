@@ -30,20 +30,35 @@ class EmbeddingService:
     
     def embed_bakery_content(self, bakery_data: dict) -> List[float]:
         """Generate embedding for bakery content
-        
+
         Args:
-            bakery_data: Dict with name, ai_summary, category, etc.
-            
+            bakery_data: Dict with name, ai_summary, etc.
+
         Returns:
             Embedding vector
         """
         # Combine all relevant information for embedding
-        content_parts = [
-            bakery_data.get("name", ""),
-            bakery_data.get("ai_summary", ""),
-            bakery_data.get("category", ""),
-            bakery_data.get("address", ""),
-        ]
-        
-        content = " ".join([part for part in content_parts if part])
+        content_parts = []
+
+        # Add name
+        if bakery_data.get("name"):
+            content_parts.append(bakery_data["name"])
+
+        # Add address
+        if bakery_data.get("address"):
+            content_parts.append(bakery_data["address"])
+
+        # Add AI summary
+        if bakery_data.get("ai_summary"):
+            content_parts.append(bakery_data["ai_summary"])
+
+        # Add bread tags (handle both list and string)
+        bread_tags = bakery_data.get("bread_tags")
+        if bread_tags:
+            if isinstance(bread_tags, list):
+                content_parts.append(", ".join(bread_tags))
+            elif isinstance(bread_tags, str):
+                content_parts.append(bread_tags)
+
+        content = " ".join(content_parts)
         return self.embed_text(content)

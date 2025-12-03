@@ -1,17 +1,18 @@
 from pydantic_settings import BaseSettings
 from functools import lru_cache
+from pathlib import Path
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 
 class Settings(BaseSettings):
     """Application settings"""
     
     # Database
-    database_url: str = "postgresql://user:password@localhost:5432/breadyforsuwon"
+    database_url: str
     
-    # Vector DB
-    pinecone_api_key: str = ""
-    pinecone_environment: str = "us-east1-aws"
-    pinecone_index: str = "bakeries"
+    # Vector DB - Weaviate
+    weaviate_url: str = "http://localhost:8080"
+    weaviate_class_name: str = "Bakery"
     
     # LLM
     openai_api_key: str = ""
@@ -24,27 +25,26 @@ class Settings(BaseSettings):
     api_v1_prefix: str = "/api/v1"
     
     # JWT / Auth
-    jwt_secret: str = "changeme"
-    jwt_algorithm: str = "HS256"
+    jwt_secret: str
+    jwt_algorithm: str
     jwt_exp_seconds: int = 60 * 60 * 24 * 7  # 7 days
-    session_cookie_name: str = "session"
+    session_cookie_name: str
 
     # Kakao OAuth
-    kakao_client_id: str = ""
-    kakao_client_secret: str = ""
-    kakao_redirect_uri: str = "http://localhost:3000/auth/kakao/callback"
-    frontend_url: str = "http://localhost:3000"
+    kakao_client_id: str
+    kakao_client_secret: str
+    kakao_redirect_uri: str
+    frontend_url: str
     
     # Embedding Settings
     embedding_dimension: int = 1536  # text-embedding-3-large
     top_k_results: int = 5
     
     class Config:
-        env_file = ".env"
+        env_file = BASE_DIR / ".env"
         case_sensitive = False
 
 
-@lru_cache()
 def get_settings() -> Settings:
     return Settings()
 

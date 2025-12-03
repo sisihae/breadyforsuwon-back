@@ -21,16 +21,12 @@ class RAGService:
     def search_bakeries(
         self,
         query: str,
-        district: Optional[str] = None,
-        bread_tags: Optional[List[str]] = None,
         top_k: int = 5
     ) -> List[BakeryWithDistance]:
         """Search bakeries using RAG
         
         Args:
             query: Search query
-            district: Optional district filter
-            bread_tags: Optional bread tag filters
             top_k: Number of results to return
             
         Returns:
@@ -39,16 +35,10 @@ class RAGService:
         # Generate query embedding
         query_embedding = self.embedding_service.embed_text(query)
         
-        # Build filters if district is specified
-        filters = None
-        if district:
-            filters = {"district": {"$eq": district}}
-        
         # Query vector DB
         vector_results = self.vector_repo.query(
             embedding=query_embedding,
             top_k=top_k * 2,  # Get more to filter by bread_tags
-            filters=filters
         )
         
         if not vector_results:
@@ -61,13 +51,6 @@ class RAGService:
         
         # Get bakery details from RDB
         bakeries = self.bakery_repo.get_by_ids(bakery_ids)
-        
-        # Filter by bread tags if specified
-        if bread_tags:
-            bakeries = [
-                b for b in bakeries
-                if b.bread_tags and any(tag in b.bread_tags for tag in bread_tags)
-            ]
         
         # Combine with scores
         results = []
@@ -91,16 +74,12 @@ class RAGService:
     def chat(
         self,
         message: str,
-        district: Optional[str] = None,
-        bread_tags: Optional[List[str]] = None,
         context_count: int = 5
     ) -> ChatResponse:
         """Chat with RAG
         
         Args:
             message: User message
-            district: Optional district filter
-            bread_tags: Optional bread tag filters
             context_count: Number of context documents to retrieve
             
         Returns:
@@ -109,8 +88,6 @@ class RAGService:
         # Search relevant bakeries
         search_results = self.search_bakeries(
             query=message,
-            district=district,
-            bread_tags=bread_tags,
             top_k=context_count
         )
         
@@ -133,7 +110,6 @@ class RAGService:
             chat_repo = ChatRepository(self.db)
             metadata_json = {
                 "sources": sources,
-                "bread_tags": bread_tags,
                 "bakery_ids": [str(b.id) for b in search_results]
             }
             chat_repo.create_history(user_message=message, bot_response=response_text, metadata_json=metadata_json)

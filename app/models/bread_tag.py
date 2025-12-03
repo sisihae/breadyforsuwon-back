@@ -17,7 +17,7 @@ class BreadTag(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(128), nullable=False, unique=True, index=True)  # e.g. '크로아상'
-    slug = Column(String(128), nullable=False, unique=True, index=True)  # e.g. 'croissant'
+    slug = Column(String(128), nullable=True, unique=True, index=True)  # e.g. 'croissant'
 
     # Relationship back to bakeries
     bakeries = relationship("Bakery", secondary=bakery_bread_tag, back_populates="bread_tags_rel")

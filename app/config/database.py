@@ -5,6 +5,7 @@ from .settings import settings
 
 # Database URL
 SQLALCHEMY_DATABASE_URL = settings.database_url
+print(">>> SETTINGS DB URL =", settings.database_url)
 
 # Engine
 engine = create_engine(

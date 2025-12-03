@@ -59,13 +59,9 @@ def load_bakeries_from_csv(csv_path: str):
                 bakery = Bakery(
                     id=bakery_id,
                     name=bakery_data["name"],
-                    shop_id=bakery_data.get("shop_id"),
+                    shop_id=bakery_data.get("id"),
                     rating=bakery_data.get("rating"),
                     address=bakery_data["address"],
-                    tel=bakery_data.get("tel"),
-                    website=bakery_data.get("website"),
-                    category=bakery_data.get("category"),
-                    district=bakery_data.get("district"),
                     ai_summary=bakery_data.get("ai_summary"),
                 )
                 

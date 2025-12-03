@@ -17,8 +17,7 @@ class LLMService:
 1. 사용자의 요구사항을 정확히 파악하세요 (분위기, 맛, 방문 목적 등)
 2. 추천하는 빵집이 왜 좋은지 설명하세요
 3. 친절하고 자연스러운 톤으로 답변하세요
-4. 구체적인 정보 (주소, 평점, 특징)를 포함하세요
-5. 한국어로 답변하세요
+4. 구체적인 정보 (주소, 특징)를 포함하세요
 
 추천 빵집 정보가 주어질 때, 이를 활용하여 최적의 답변을 만드세요."""
     
@@ -70,7 +69,6 @@ class LLMService:
         for i, bakery in enumerate(bakeries, 1):
             bakery_info = f"""
 빵집 {i}. {bakery.name}
-- 평점: {bakery.rating if bakery.rating else '평점 없음'}
 - 주소: {bakery.address}
 - 위치: {bakery.district}
 - 특징: {bakery.ai_summary if bakery.ai_summary else '정보 없음'}
