@@ -15,13 +15,14 @@ from app.config import settings
 class FakeUserRepo:
     def __init__(self, db):
         self.db = db
-    
+
     def get_by_id(self, user_id):
         return SimpleNamespace(
             id=user_id,
             email="test@example.com",
             name="Test User",
             kakao_id="123456",
+            profile_image=None,
             created_at=datetime.now(),
         )
 
@@ -49,7 +50,7 @@ class FakeWishlistRepo:
 
 def test_get_me(monkeypatch):
     user_id = uuid4()
-    
+
     monkeypatch.setattr("app.routers.auth.get_current_user_id", lambda token: user_id)
     monkeypatch.setattr("app.routers.auth.UserRepository", FakeUserRepo)
     monkeypatch.setattr("app.routers.auth.BakeryVisitRecordRepository", FakeVisitRecordRepo)

@@ -1,6 +1,7 @@
 from fastapi.testclient import TestClient
 from types import SimpleNamespace
-from uuid import uuid4
+from uuid import uuid4, UUID
+from datetime import datetime
 import sys
 import os
 
@@ -16,15 +17,22 @@ class FakeRepo:
         self.items = {}
 
     def create(self, user_id, bakery_id, note=None):
+        # Convert to UUID if string
+        if isinstance(user_id, str):
+            user_id = UUID(user_id)
+        if isinstance(bakery_id, str):
+            bakery_id = UUID(bakery_id)
+
         item_id = uuid4()
+        now = datetime.now()
         self.items[item_id] = SimpleNamespace(
             id=item_id,
             user_id=user_id,
             bakery_id=bakery_id,
             note=note,
             visited=False,
-            created_at=None,
-            updated_at=None,
+            created_at=now,
+            updated_at=now,
         )
         return self.items[item_id]
 
@@ -42,6 +50,7 @@ class FakeRepo:
             item.note = note
         if visited is not None:
             item.visited = visited
+        item.updated_at = datetime.now()
         return item
 
     def delete(self, item_id):
@@ -52,6 +61,9 @@ class FakeRepo:
 
 
 class FakeBakeryRepo:
+    def __init__(self, db):
+        self.db = db
+
     def get_by_id(self, bakery_id):
         return SimpleNamespace(
             id=bakery_id,
@@ -64,10 +76,10 @@ class FakeBakeryRepo:
 def test_list_wishlist(monkeypatch):
     user_id = uuid4()
     bakery_id = uuid4()
-    
+
     def mock_get_current_user(session=None):
         return user_id
-    
+
     monkeypatch.setattr("app.routers.wishlist.get_current_user_id", lambda token: user_id)
     monkeypatch.setattr("app.routers.wishlist.WishlistRepository", FakeRepo)
     monkeypatch.setattr("app.routers.wishlist.BakeryRepository", FakeBakeryRepo)
@@ -86,7 +98,7 @@ def test_list_wishlist(monkeypatch):
 def test_create_wishlist_item(monkeypatch):
     user_id = uuid4()
     bakery_id = uuid4()
-    
+
     monkeypatch.setattr("app.routers.wishlist.get_current_user_id", lambda token: user_id)
     monkeypatch.setattr("app.routers.wishlist.WishlistRepository", FakeRepo)
     monkeypatch.setattr("app.routers.wishlist.BakeryRepository", FakeBakeryRepo)
@@ -108,11 +120,11 @@ def test_update_wishlist_item(monkeypatch):
     user_id = uuid4()
     bakery_id = uuid4()
     item_id = uuid4()
-    
+
     # Prepare fake repo with an item
     fake_repo_instance = FakeRepo(None)
     fake_item = fake_repo_instance.create(user_id, bakery_id)
-    
+
     monkeypatch.setattr("app.routers.wishlist.get_current_user_id", lambda token: user_id)
     monkeypatch.setattr("app.routers.wishlist.WishlistRepository", lambda db: fake_repo_instance)
     monkeypatch.setattr("app.routers.wishlist.BakeryRepository", FakeBakeryRepo)
@@ -133,10 +145,10 @@ def test_update_wishlist_item(monkeypatch):
 def test_delete_wishlist_item(monkeypatch):
     user_id = uuid4()
     bakery_id = uuid4()
-    
+
     fake_repo_instance = FakeRepo(None)
     fake_item = fake_repo_instance.create(user_id, bakery_id)
-    
+
     monkeypatch.setattr("app.routers.wishlist.get_current_user_id", lambda token: user_id)
     monkeypatch.setattr("app.routers.wishlist.WishlistRepository", lambda db: fake_repo_instance)
     monkeypatch.setattr("app.routers.wishlist.BakeryRepository", FakeBakeryRepo)
