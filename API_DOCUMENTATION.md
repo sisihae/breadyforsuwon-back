@@ -1,9 +1,3 @@
-# BreadyForSuwon API Documentation
-
-## Overview
-
-BreadyForSuwon is a RAG-powered bakery recommendation chatbot backend for exploring bakeries in Suwon. It provides user authentication, bakery search, wishlist management, visit record tracking, and chat history.
-
 **Base URL:** `http://localhost:8000/api/v1`
 
 ---
