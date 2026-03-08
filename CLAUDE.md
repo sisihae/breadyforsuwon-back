@@ -1,8 +1,8 @@
 # Project Overview
 
-Bready for Suwon is an **agent-orchestrated local discovery system** for bakeries in Suwon, South Korea.
+Bready for Suwon is an agent-orchestrated local discovery system for bakeries in Suwon, South Korea.
 
-The goal of this project is to experiment with **production-oriented LLM agent architectures**, rather than building a simple chatbot or RAG application.
+The goal of this project is to experiment with production-oriented LLM agent architectures, rather than building a simple chatbot or RAG application.
 
 The system follows the principle:
 Human defines goals and policies → agents execute workflows.
