@@ -44,7 +44,7 @@ Claude should prefer designs that support these goals.
 
 # Agent Architecture
 
-## Planner Agent
+## 1. Planner Agent
 
 Responsibilities
 
@@ -69,7 +69,7 @@ The planner must not call tools directly.
 
 ---
 
-## Execution Agents
+## 2. Execution Agents
 
 Execution agents perform tool-based tasks.
 
@@ -104,7 +104,7 @@ Responsibilities
 
 ---
 
-## Context Aggregation
+## 3. Context Aggregation
 
 Combine results from execution agents into a single context object.
 
@@ -120,7 +120,7 @@ Example structure:
 
 ---
 
-## Response Generator
+## 4. Response Generator
 
 Uses the aggregated context to generate recommendations.
 
@@ -132,7 +132,7 @@ Responsibilities
 
 ---
 
-## QA / Policy Agent
+## 5. QA / Policy Agent
 
 The QA agent validates outputs before returning them to the user.
 
@@ -150,7 +150,7 @@ Example validation rules
 
 ---
 
-## Evaluation System
+## 6. Evaluation System
 
 LLM outputs are non-deterministic, so evaluation must be metric-based.
 
@@ -164,7 +164,7 @@ Evaluation should be implemented as a separate module, not mixed with generation
 
 ---
 
-## Logging System
+## 7. Logging System
 
 Each request should produce an agent trace.
 
