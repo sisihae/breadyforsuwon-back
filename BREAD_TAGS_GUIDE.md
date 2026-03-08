@@ -27,10 +27,9 @@ class Bakery(Base):
 
 **추천**: PostgreSQL 사용 시 **ARRAY 타입** 사용
 
-## 지원하는 빵 종류 (태그)
+## 지원하는 bread tag
 
 ```python
-# 현재 지원하는 빵 종류
 BREAD_TAGS = [
     "크로아상",      # Croissant
     "식빵",          # Bread loaf
@@ -48,7 +47,7 @@ BREAD_TAGS = [
 
 ## API 사용 예시
 
-### 1. 빵집 생성 (빵 종류 지정)
+### 1. bakery 생성 (bread_tags 지정)
 
 ```bash
 curl -X POST "http://localhost:8000/api/v1/bakeries" \
@@ -61,7 +60,7 @@ curl -X POST "http://localhost:8000/api/v1/bakeries" \
   }'
 ```
 
-### 2. 빵집 업데이트 (빵 종류 수정)
+### 2.bakery 업데이트 (bread_tags 수정)
 
 ```bash
 curl -X PUT "http://localhost:8000/api/v1/bakeries/{bakery_id}" \
@@ -71,7 +70,7 @@ curl -X PUT "http://localhost:8000/api/v1/bakeries/{bakery_id}" \
   }'
 ```
 
-### 3. 특정 빵 종류로 검색
+### 3. 특정 bread_tags로 검색
 
 ```bash
 # POST /api/v1/search - bread_tags 필터링
@@ -107,7 +106,7 @@ curl -X POST "http://localhost:8000/api/v1/search" \
 ]
 ```
 
-### 4. 챗봇에서 빵 종류로 필터링
+### 4. 챗봇에서 bread_tags로 필터링
 
 ```bash
 curl -X POST "http://localhost:8000/api/v1/chat" \
@@ -219,9 +218,9 @@ def downgrade():
     op.drop_column('bakeries', 'bread_tags')
 ```
 
-## 벡터 DB 임베딩
+## Vector DB 임베딩
 
-bread_tags는 LLM 응답 생성 시 컨텍스트로 사용됩니다.
+bread_tags는 LLM 응답 생성 시 context로 사용됩니다.
 
 ```python
 # LLM 컨텍스트에 포함
