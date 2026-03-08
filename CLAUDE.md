@@ -73,7 +73,7 @@ The planner must not call tools directly.
 
 Execution agents perform tool-based tasks.
 
-### Retrieval Agent
+### 2-1. Retrieval Agent
 
 Responsibilities
 
@@ -85,7 +85,7 @@ Tools
 - Weaviate vector search
 - embedding similarity
 
-### Tag Filter Agent
+### 2-2. Tag Filter Agent
 
 Responsibilities
 
@@ -95,7 +95,7 @@ Tools
 
 - PostgreSQL queries
 
-### Map Agent
+### 2-3. Map Agent
 
 Responsibilities
 
@@ -150,7 +150,7 @@ Example validation rules
 
 ---
 
-## 6. Evaluation System
+## 6-1. Evaluation System
 
 LLM outputs are non-deterministic, so evaluation must be metric-based.
 
@@ -161,6 +161,18 @@ Example metrics
 - policy violation rate
 
 Evaluation should be implemented as a separate module, not mixed with generation logic.
+
+---
+
+## 6-2. Fallback Strategy
+
+If the QA agent fails validation:
+Fallback to deterministic search.
+
+Example fallback methods
+
+- SQL tag filtering
+- rule-based bakery ranking
 
 ---
 
@@ -183,18 +195,6 @@ Example log structure:
 ```
 
 Logs should allow debugging of agent behavior.
-
----
-
-## Fallback Strategy
-
-If the QA agent fails validation:
-Fallback to deterministic search.
-
-Example fallback methods
-
-- SQL tag filtering
-- rule-based bakery ranking
 
 ---
 
